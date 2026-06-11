@@ -18,7 +18,8 @@ Formato JSON clip:
   - "binTintColor"         → colore bin del clip es. "&h000433FF" (blu), ometti per default
   - "textColor"            → colore testo del clip es. "&h00000000" (nero), ometti per default
 
-Campi opzionali a livello di Clipset (applicati ai clip senza colore proprio):
+Campi opzionali a livello di Clipset (sovrascrivono il colore di tutti
+i clip del set — per riverniciare l'intero set in un colore uniforme):
   - "defaultBinTintColor"  → colore bin di default per tutti i clip del set
   - "defaultTextColor"     → colore testo di default per tutti i clip del set
 
@@ -846,15 +847,16 @@ class App(tk.Tk):
             self._log(f"Clipset importati/aggiornati : {res['nuovi']}")
             self._log(f"Clip importati               : {res['tot_clip']}")
             if res["conflitti"]:
-                self._log(f"⚠️  Saltati (già esistenti): {', '.join(res['conflitti'])}")
+                label_conflitti = "Aggiornati (force)" if force_update else "Saltati (già esistenti)"
+                self._log(f"⚠️  {label_conflitti}: {', '.join(res['conflitti'])}")
             self._log("✅ Importazione completata")
             log.info(f"APPLY completato: {res['nuovi']} clipset, "
                      f"{res['tot_clip']} clip importati. "
-                     f"Saltati: {res.get('conflitti', [])}")
+                     f"{'Aggiornati (force)' if force_update else 'Saltati'}: {res.get('conflitti', [])}")
             self._aggiorna_lista_backup()
             messagebox.showinfo("Completato",
                                 f"Importati/aggiornati {res['nuovi']} Clipset ({res['tot_clip']} clip).\n"
-                                + (f"Saltati: {', '.join(res['conflitti'])}"
+                                + (f"{'Aggiornati (force)' if force_update else 'Saltati'}: {', '.join(res['conflitti'])}"
                                    if res['conflitti'] else ""))
         except Exception as e:
             self._log(f"❌ Errore: {e}")
