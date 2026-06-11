@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-aggiorna_iClip.py  v1.2
+aggiorna_iClip.py  v1.4.0
 Importa ed esporta Clipset dal database iClip (bundle .iclipdb).
 
 Funzionalità:
@@ -9,6 +9,19 @@ Funzionalità:
   - Apply su backup .iclipdb (mai sul database live)
   - Salva copia _pre_import prima di modificare
   - Esporta tutti i bin del database in file JSON
+  - export_dir persistito tra sessioni (v1.3)
+  - Force-update con conferma a due livelli (v1.3)
+
+Changelog:
+  v1.4.0 — 2026-06
+    fix: timestamp completo in salva_copia (era solo HH:MM:SS, causava
+         FileExistsError con due apply nello stesso secondo di giorni diversi)
+    fix: messaggio "Aggiornati (force)" invece di "Saltati" quando force-update
+         è attivo (log GUI, log file e messagebox)
+    refactor: rimossa reorder_clips_in_clipset (codice morto e non funzionante)
+  v1.3.0 — 2026-05
+    feat: export_dir persistito tra sessioni tramite file di configurazione
+    feat: force-update con conferma a due livelli (sostituzione clipset esistenti)
 
 Formato JSON clip:
   - "title"        → nome del bin in iClip (visibile nella UI)
@@ -82,7 +95,7 @@ except Exception:
 
 # ── Identita' applicativa ──────────────────────────────────────────────────────
 APP_NAME = "AggiornaiClip"
-VERSION  = "1.3.0"
+VERSION  = "1.4.0"
 
 # ── Logger di sessione ─────────────────────────────────────────────────────────
 # Creato all'avvio del modulo: ogni esecuzione produce un file di log dedicato
