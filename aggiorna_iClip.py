@@ -195,7 +195,7 @@ def now_ts():
 def salva_copia(bundle):
     base, name = os.path.split(bundle.rstrip("/"))
     stem = name.replace(".iclipdb", "")
-    ts   = datetime.now().strftime("%H%M%S")
+    ts   = datetime.now().strftime("%Y-%m-%d_%H%M%S")
     dest = os.path.join(base, f"{stem}_pre_import_{ts}.iclipdb")
     shutil.copytree(bundle, dest)
     return dest
@@ -292,11 +292,6 @@ def importa_clipset(bundle, clipsets_da_importare, dry_run=True, log_fn=None, fo
         if esiste_gia and force_update:
             # Ricava ID e posizione del set esistente
             set_id_esistente = next(s[0] for s in stato["sets"] if s[1] == nome)
-            pos_set_esistente = next(
-                r[0] for r in (sqlite3.connect(db_path(bundle)).execute(
-                    "SELECT the_position FROM clippingSetTable WHERE ID=?",
-                    (set_id_esistente,)).fetchall())
-            ) if not dry_run else pos_set + 1
             stato_tag = "[DRY-RUN AGGIORNA]" if dry_run else "[AGGIORNATO]"
             log(f"{stato_tag} Clipset \"{ nome}\" ({n} clip) — sovrascrive set esistente")
             if not dry_run:
