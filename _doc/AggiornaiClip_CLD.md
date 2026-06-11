@@ -1,5 +1,5 @@
 # AggiornaiClip — Documentazione
-**Versione app:** 1.3.0
+**Versione app:** 1.4.0
 **Aggiornato:** 2026-05-27
 
 ---
@@ -7,7 +7,7 @@
 ## 1. Struttura file
 
 ```
-Python/stable/AggiornaiClip/
+Python/_tools/AggiornaiClip/
 ├── aggiorna_iClip.py          ← app principale (GUI tkinter)
 ├── backup_iClip.command       ← script backup database iClip
 ├── restore_iClip.command      ← script restore con menu interattivo
@@ -285,6 +285,11 @@ Formato: `&hAARRGGBB` — AA = opacità (sempre `00` per i bin), RR GG BB = colo
 
 ## 8. Storico modifiche
 
+- **v1.4.0 (11/06/2026)** — Manutenzione e pulizia:
+  - Fix: timestamp completo in `salva_copia` (era solo HHMMSS — due apply alla stessa ora di giorni diversi generavano lo stesso nome `_pre_import`)
+  - Fix: messaggi "Aggiornati (force)" invece di "Saltati" quando force-update è attivo (log GUI, log file e messagebox)
+  - Refactor: rimossa `reorder_clips_in_clipset` (codice morto e non funzionante)
+  - Fix docstring: semantica `defaultBinTintColor`/`defaultTextColor` corretta ("riverniciatura" del set, non default per clip senza colore)
 - **v1.3.0 (27/05/2026)** — Refactoring allineamento ambiente IRC:
   - Migrazione a `irc_paths` per i path canonici (rimossi `HOME`, `DROPBOX` hardcoded)
   - Aggiunto `irc_logging` per log di sessione su file in `~/Documents/log/AggiornaiClip/`

@@ -14,8 +14,8 @@ Funzionalità:
 
 Changelog:
   v1.4.0 — 2026-06
-    fix: timestamp completo in salva_copia (era solo HH:MM:SS, causava
-         FileExistsError con due apply nello stesso secondo di giorni diversi)
+    fix: timestamp completo in salva_copia (era solo HHMMSS: due apply alla
+         stessa ora di giorni diversi generavano lo stesso nome _pre_import)
     fix: messaggio "Aggiornati (force)" invece di "Saltati" quando force-update
          è attivo (log GUI, log file e messagebox)
     refactor: rimossa reorder_clips_in_clipset (codice morto e non funzionante)
@@ -345,7 +345,8 @@ def importa_clipset(bundle, clipsets_da_importare, dry_run=True, log_fn=None, fo
                 # esiste_gia and not force_update and dry_run: già loggato sopra
                 set_id_per_clip = None
 
-        # Colori di default del clipset (applicati ai clip che non hanno colore proprio)
+        # Colori di default del clipset (se valorizzati, sovrascrivono il colore
+        # di tutti i clip del set — semantica "riverniciatura", vedi docstring)
         default_bin_tint   = cs.get("defaultBinTintColor", None) or None
         default_text_color = cs.get("defaultTextColor",    None) or None
 
@@ -363,9 +364,9 @@ def importa_clipset(bundle, clipsets_da_importare, dry_run=True, log_fn=None, fo
             prima_riga = testo_eff.split("\n")[0] if testo_eff else ""
             # previewStyle: 2=mostra nome bin (Show), 1=mostra preview testo
             preview_style = clip.get("previewStyle", 2)
-            # Colore bin: usa il valore del clip se presente, altrimenti il default del set
-            # Se il default è valorizzato sovrascrive tutti i clip del set
-            # Se è vuoto/None ogni clip mantiene il suo colore (o nessuno)
+            # Colore bin: il default del set, se valorizzato, prevale sul colore
+            # del singolo clip (riverniciatura). Se è vuoto/None, ogni clip
+            # mantiene il suo colore (o nessuno).
             bin_tint   = default_bin_tint   or clip.get("binTintColor",  None)
             text_color = default_text_color or clip.get("textColor",     None)
 
